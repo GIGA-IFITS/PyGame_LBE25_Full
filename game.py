@@ -55,17 +55,22 @@ def main():
 
     # -- Game State Machine --
     game_state = "MENU"
+    selected_ship = 0  # Default ship selection
     
     while True:
         if game_state == "MENU":
             if hasattr(menu, 'menu_loop'):
-                game_state = menu.menu_loop(screen, clock)
+                result = menu.menu_loop(screen, clock)
+                if isinstance(result, tuple):
+                    game_state, selected_ship = result
+                else:
+                    game_state = result
             else:
                 print("Fungsi menu_loop tidak ditemukan, memulai game secara langsung.")
                 game_state = "PLAYING"
         elif game_state == "PLAYING":
             # Diubah dari 'game.game_loop' menjadi 'core.game_loop'
-            game_state = core.game_loop(screen, clock, assets)
+            game_state = core.game_loop(screen, clock, assets, selected_ship)
         
         if game_state == "QUIT":
             break

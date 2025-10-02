@@ -40,6 +40,9 @@ def draw_button(surface, text, x, y, width, height):
 
 # -- Main Menu Loop --
 def menu_loop(screen, clock):
+    selected_ship = 0  # 0=Blue, 1=Red, 2=Shadow
+    ship_names = ['Blue', 'Red', 'Shadow']
+    
     while True:
         clock.tick(60)
         
@@ -50,16 +53,30 @@ def menu_loop(screen, clock):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return "QUIT"
+                # Ship selection with arrow keys
+                if event.key == pygame.K_LEFT:
+                    selected_ship = (selected_ship - 1) % len(ship_names)
+                elif event.key == pygame.K_RIGHT:
+                    selected_ship = (selected_ship + 1) % len(ship_names)
 
         # Drawing
         screen.fill(BLACK)
         draw_text(screen, "SPACE SHOOTER", 64, WIDTH / 2, HEIGHT / 4)
         
-        play_button = draw_button(screen, "Play", WIDTH / 2 - 100, HEIGHT / 2, 200, 50)
-        quit_button = draw_button(screen, "Quit", WIDTH / 2 - 100, HEIGHT / 2 + 70, 200, 50)
+        # Ship selection display
+        draw_text(screen, "Select Ship:", 30, WIDTH / 2, HEIGHT / 2 - 80)
+        draw_text(screen, f"< {ship_names[selected_ship]} >", 36, WIDTH / 2, HEIGHT / 2 - 40, (100, 200, 255))
+        draw_text(screen, "Use ← → arrows to change ship", 20, WIDTH / 2, HEIGHT / 2 - 10)
+        
+        play_button = draw_button(screen, "Play", WIDTH / 2 - 100, HEIGHT / 2 + 30, 200, 50)
+        quit_button = draw_button(screen, "Quit", WIDTH / 2 - 100, HEIGHT / 2 + 100, 200, 50)
+        
+        # Controls info
+        draw_text(screen, "Controls:", 24, WIDTH / 2, HEIGHT - 120)
+        draw_text(screen, "WASD/Arrows: Move • Space: Shoot • C: Change Ship • P: Pause", 18, WIDTH / 2, HEIGHT - 95)
 
         if play_button:
-            return "PLAYING"
+            return ("PLAYING", selected_ship)
         if quit_button:
             return "QUIT"
             

@@ -25,15 +25,56 @@ def draw_text(surface, text, size, x, y, color=WHITE):
 class Player(pygame.sprite.Sprite):
     def __init__(self, game_assets_folder):
         super().__init__()
-        player_img_path = os.path.join(game_assets_folder, "PlayerBlue_Frame_01_png_processed.png")
-        self.original_image = pygame.image.load(player_img_path).convert_alpha()
-        self.image = pygame.transform.scale(self.original_image, (PLAYER_WIDTH, PLAYER_HEIGHT))
+        self.game_assets_folder = game_assets_folder
+        
+        # Define available ship types
+        self.ship_types = ['Blue', 'Red', 'Shadow']
+        self.current_ship_index = 0
+        self.ship_colors = {
+            'Blue': 'PlayerBlue_Frame_01_png_processed.png',
+            'Red': 'PlayerRed_Frame_01_png_processed.png',
+            'Shadow': 'PlayerShadow_Frame_01_png_processed.png'
+        }
+        
+        # Load current ship image
+        self.load_ship_image()
         self.rect = self.image.get_rect(centerx=WIDTH / 2, bottom=HEIGHT - 10)
         self.radius = 20
+    
+    def load_ship_image(self):
+        """Load the current ship's image"""
+        current_ship = self.ship_types[self.current_ship_index]
+        player_img_path = os.path.join(self.game_assets_folder, self.ship_colors[current_ship])
+        self.original_image = pygame.image.load(player_img_path).convert_alpha()
+        self.image = pygame.transform.scale(self.original_image, (PLAYER_WIDTH, PLAYER_HEIGHT))
+    
+    def change_ship(self):
+        """Change to the next ship type"""
+        self.current_ship_index = (self.current_ship_index + 1) % len(self.ship_types)
+        old_center = self.rect.center
+        self.load_ship_image()
+        self.rect = self.image.get_rect(center=old_center)
+    
+    def get_current_ship_name(self):
+        """Get the name of the current ship"""
+        return self.ship_types[self.current_ship_index]
+    
+    def get_ship_stats(self):
+        """Get special stats for different ships"""
+        stats = {
+            'Blue': {'speed_bonus': 0, 'description': 'Balanced'},
+            'Red': {'speed_bonus': 1, 'description': 'Fast'},
+            'Shadow': {'speed_bonus': -1, 'description': 'Stealth'}
+        }
+        return stats[self.get_current_ship_name()]
         
     def update(self):
         keys = pygame.key.get_pressed()
-        speed = 5
+        # Apply ship-specific speed bonus
+        base_speed = 5
+        ship_stats = self.get_ship_stats()
+        speed = base_speed + ship_stats['speed_bonus']
+        
         if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and self.rect.left > 0: self.rect.x -= speed
         if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and self.rect.right < WIDTH: self.rect.x += speed
         if (keys[pygame.K_UP] or keys[pygame.K_w]) and self.rect.top > 0: self.rect.y -= speed
@@ -106,13 +147,15 @@ class Explosion(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect(center=center)
 
 # -- Main Game Loop --
-def game_loop(screen, clock, assets):
+def game_loop(screen, clock, assets, selected_ship=0):
     # Setup
     game_assets_folder = os.path.join("Assets", "PixelSpaceRage", "256px")
     all_sprites = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
     bullets = pygame.sprite.Group()
     player = Player(game_assets_folder)
+    player.current_ship_index = selected_ship  # Set the initial ship from menu
+    player.load_ship_image()  # Reload the image with the selected ship
     all_sprites.add(player)
     
     def spawn_new_block():
@@ -143,6 +186,8 @@ def game_loop(screen, clock, assets):
                     bullet = Bullet(player.rect.centerx, player.rect.top, assets['bullet_img'])
                     all_sprites.add(bullet)
                     bullets.add(bullet)
+                if game_sub_state == "PLAYING" and event.key == pygame.K_c:
+                    player.change_ship()  # Change ship with C key
                 if game_sub_state == "GAME_OVER" and event.key == pygame.K_r:
                     return "PLAYING" # Kembali ke main.py untuk restart
                 if game_sub_state == "GAME_OVER" and event.key == pygame.K_x:
@@ -181,6 +226,12 @@ def game_loop(screen, clock, assets):
         screen.fill(BLACK)
         all_sprites.draw(screen)
         draw_text(screen, f"Score: {score}", 30, WIDTH / 2, 10)
+        
+        # Display current ship type
+        if player.alive():
+            ship_stats = player.get_ship_stats()
+            draw_text(screen, f"Ship: {player.get_current_ship_name()} ({ship_stats['description']})", 25, 100, 50)
+            draw_text(screen, "Press C to change ship", 20, 100, 75)
         
         if game_sub_state == "PAUSED":
             draw_text(screen, "Game Paused", 48, WIDTH / 2, HEIGHT / 2 - 50)
