@@ -15,8 +15,7 @@ SLIDER_HANDLE_COLOR = (100, 150, 200)
 
 # -- Global Settings --
 settings = {
-    'brightness': 0.8,  # 0.0 to 1.0
-    'music_volume': 0.4  # 0.0 to 1.0
+    'brightness': 0.8  # 0.0 to 1.0
 }
 
 # -- Utility Functions --
@@ -111,10 +110,7 @@ def options_loop(screen, clock):
         draw_text(screen, "OPTIONS", 64, WIDTH / 2, HEIGHT / 4)
         
         # Brightness slider
-        settings['brightness'] = draw_slider(screen, WIDTH / 2 - 150, HEIGHT / 2 - 50, 300, 20, settings['brightness'], "Brightness")
-        
-        # Music volume slider
-        settings['music_volume'] = draw_slider(screen, WIDTH / 2 - 150, HEIGHT / 2 + 50, 300, 20, settings['music_volume'], "Music Volume")
+        settings['brightness'] = draw_slider(screen, WIDTH / 2 - 150, HEIGHT / 2, 300, 20, settings['brightness'], "Brightness")
         
         # Apply brightness overlay
         if settings['brightness'] < 1.0:
@@ -165,9 +161,9 @@ def menu_loop(screen, clock):
         options_button = draw_button(screen, "Options", WIDTH / 2 - 100, HEIGHT / 2 + 90, 200, 50)
         quit_button = draw_button(screen, "Quit", WIDTH / 2 - 100, HEIGHT / 2 + 150, 200, 50)
         
-        # Controls info
-        draw_text(screen, "Controls:", 24, WIDTH / 2, HEIGHT - 120)
-        draw_text(screen, "WASD/Arrows: Move • Space: Shoot • P: Pause", 18, WIDTH / 2, HEIGHT - 95)
+        # Controls info - diturunkan ke bawah agar tidak nabrak tombol Quit
+        draw_text(screen, "Controls:", 24, WIDTH / 2, HEIGHT - 80)
+        draw_text(screen, "WASD/Arrows: Move • Space: Shoot • P: Pause", 18, WIDTH / 2, HEIGHT - 55)
 
         if play_button:
             return ("PLAYING", selected_ship)

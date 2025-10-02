@@ -71,8 +71,6 @@ def main():
         elif game_state == "OPTIONS":
             if hasattr(menu, 'options_loop'):
                 game_state = menu.options_loop(screen, clock)
-                # Apply music volume setting
-                pygame.mixer.music.set_volume(menu.settings['music_volume'])
             else:
                 print("Fungsi options_loop tidak ditemukan, kembali ke menu.")
                 game_state = "MENU"

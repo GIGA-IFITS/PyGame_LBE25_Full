@@ -9,7 +9,7 @@ Sebuah game space shooter yang dibuat menggunakan PyGame untuk Learning by Examp
 - Tembak asteroid dengan Space bar
 - Hindari tabrakan dengan asteroid
 - Sistem scoring berdasarkan asteroid yang dihancurkan
-- Background music dan sound effects
+- Background music otomatis
 - Animasi ledakan saat asteroid hancur
 
 ### ✨ Fitur Pergantian Pesawat
@@ -27,7 +27,6 @@ Game ini mendukung **2 jenis pesawat** yang dapat dipilih di menu utama:
 ### ⚙️ Menu Options
 Menu pengaturan dengan fitur:
 - **Brightness Control**: Mengatur kecerahan layar game (0-100%)
-- **Music Volume**: Mengatur volume background music (0-100%)
 - Pengaturan tersimpan selama sesi bermain
 
 ## Kontrol Game
@@ -38,7 +37,7 @@ Menu pengaturan dengan fitur:
 - **ESC**: Keluar dari game
 
 ### Di Menu Options:
-- **Mouse**: Drag slider untuk mengatur brightness dan music volume
+- **Mouse**: Drag slider untuk mengatur brightness
 - **ESC**: Kembali ke menu utama
 
 ### Saat Bermain:
@@ -97,15 +96,14 @@ PyGame_LBE25_Full/
 - Animasi rotasi asteroid yang realistis
 - Collision detection menggunakan circle collision
 - Respawn otomatis asteroid setelah hancur atau keluar layar
-- Pengaturan brightness dan volume music real-time
+- Pengaturan brightness real-time
 
 ## Tips Bermain
 
 1. **Pesawat Blue**: Pilihan terbaik untuk pemula, kecepatan seimbang
 2. **Pesawat Red**: Untuk gameplay yang lebih menantang dan cepat
 3. **Brightness**: Sesuaikan dengan kenyamanan mata Anda
-4. **Music Volume**: Atur sesuai preferensi atau matikan untuk fokus
-5. Manfaatkan fitur pause (**P**) untuk istirahat sejenak
+4. Manfaatkan fitur pause (**P**) untuk istirahat sejenak
 
 ## Credits
 
