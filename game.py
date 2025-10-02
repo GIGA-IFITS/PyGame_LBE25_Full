@@ -68,6 +68,14 @@ def main():
             else:
                 print("Fungsi menu_loop tidak ditemukan, memulai game secara langsung.")
                 game_state = "PLAYING"
+        elif game_state == "OPTIONS":
+            if hasattr(menu, 'options_loop'):
+                game_state = menu.options_loop(screen, clock)
+                # Apply music volume setting
+                pygame.mixer.music.set_volume(menu.settings['music_volume'])
+            else:
+                print("Fungsi options_loop tidak ditemukan, kembali ke menu.")
+                game_state = "MENU"
         elif game_state == "PLAYING":
             # Diubah dari 'game.game_loop' menjadi 'core.game_loop'
             game_state = core.game_loop(screen, clock, assets, selected_ship)

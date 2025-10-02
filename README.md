@@ -13,7 +13,7 @@ Sebuah game space shooter yang dibuat menggunakan PyGame untuk Learning by Examp
 - Animasi ledakan saat asteroid hancur
 
 ### ✨ Fitur Pergantian Pesawat
-Game ini mendukung **3 jenis pesawat** yang berbeda dengan karakteristik unik:
+Game ini mendukung **2 jenis pesawat** yang dapat dipilih di menu utama:
 
 #### Jenis Pesawat:
 1. **Blue Ship (Balanced)**
@@ -24,21 +24,26 @@ Game ini mendukung **3 jenis pesawat** yang berbeda dengan karakteristik unik:
    - Kecepatan +1 lebih cepat
    - Cocok untuk pemain yang suka bergerak cepat
 
-3. **Shadow Ship (Stealth)**
-   - Kecepatan -1 lebih lambat
-   - Pesawat dengan tampilan unik
+### ⚙️ Menu Options
+Menu pengaturan dengan fitur:
+- **Brightness Control**: Mengatur kecerahan layar game (0-100%)
+- **Music Volume**: Mengatur volume background music (0-100%)
+- Pengaturan tersimpan selama sesi bermain
 
 ## Kontrol Game
 
 ### Di Menu:
 - **← →** (panah kiri/kanan): Memilih jenis pesawat
-- **Mouse**: Klik tombol Play/Quit
+- **Mouse**: Klik tombol Play/Options/Quit
 - **ESC**: Keluar dari game
+
+### Di Menu Options:
+- **Mouse**: Drag slider untuk mengatur brightness dan music volume
+- **ESC**: Kembali ke menu utama
 
 ### Saat Bermain:
 - **WASD** atau **Arrow Keys**: Gerakkan pesawat
 - **Space**: Tembak peluru
-- **C**: Ganti pesawat secara real-time
 - **P**: Pause/Resume game
 - **ESC**: Keluar ke menu utama
 
@@ -80,25 +85,26 @@ PyGame_LBE25_Full/
 ## Fitur Tambahan
 
 ### 🎮 UI dan Visual
-- Informasi pesawat aktif ditampilkan di pojok kiri atas
-- Deskripsi karakteristik pesawat (Balanced/Fast/Stealth)
+- Score display di bagian atas layar
+- Pilihan pesawat di menu utama dengan visual indikator
+- Menu Options dengan slider interaktif
+- Brightness control yang mempengaruhi seluruh tampilan game
 - Instruksi kontrol di menu utama
-- Indikator visual pesawat yang dipilih di menu
-- Real-time score display
 
 ### 🔧 Sistem Game
-- Pergantian pesawat dapat dilakukan kapan saja saat bermain
+- Pemilihan pesawat hanya di menu utama (tidak bisa diganti saat bermain)
 - Setiap pesawat memiliki kecepatan gerakan yang berbeda
 - Animasi rotasi asteroid yang realistis
 - Collision detection menggunakan circle collision
 - Respawn otomatis asteroid setelah hancur atau keluar layar
+- Pengaturan brightness dan volume music real-time
 
 ## Tips Bermain
 
 1. **Pesawat Blue**: Pilihan terbaik untuk pemula, kecepatan seimbang
 2. **Pesawat Red**: Untuk gameplay yang lebih menantang dan cepat
-3. **Pesawat Shadow**: Untuk gaya bermain yang lebih strategis
-4. Gunakan tombol **C** untuk berganti pesawat sesuai situasi
+3. **Brightness**: Sesuaikan dengan kenyamanan mata Anda
+4. **Music Volume**: Atur sesuai preferensi atau matikan untuk fokus
 5. Manfaatkan fitur pause (**P**) untuk istirahat sejenak
 
 ## Credits

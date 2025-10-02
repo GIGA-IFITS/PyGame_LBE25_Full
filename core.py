@@ -28,12 +28,11 @@ class Player(pygame.sprite.Sprite):
         self.game_assets_folder = game_assets_folder
         
         # Define available ship types
-        self.ship_types = ['Blue', 'Red', 'Shadow']
+        self.ship_types = ['Blue', 'Red']
         self.current_ship_index = 0
         self.ship_colors = {
             'Blue': 'PlayerBlue_Frame_01_png_processed.png',
-            'Red': 'PlayerRed_Frame_01_png_processed.png',
-            'Shadow': 'PlayerShadow_Frame_01_png_processed.png'
+            'Red': 'PlayerRed_Frame_01_png_processed.png'
         }
         
         # Load current ship image
@@ -63,8 +62,7 @@ class Player(pygame.sprite.Sprite):
         """Get special stats for different ships"""
         stats = {
             'Blue': {'speed_bonus': 0, 'description': 'Balanced'},
-            'Red': {'speed_bonus': 1, 'description': 'Fast'},
-            'Shadow': {'speed_bonus': -1, 'description': 'Stealth'}
+            'Red': {'speed_bonus': 1, 'description': 'Fast'}
         }
         return stats[self.get_current_ship_name()]
         
@@ -148,6 +146,9 @@ class Explosion(pygame.sprite.Sprite):
 
 # -- Main Game Loop --
 def game_loop(screen, clock, assets, selected_ship=0):
+    # Import menu settings
+    import menu
+    
     # Setup
     game_assets_folder = os.path.join("Assets", "PixelSpaceRage", "256px")
     all_sprites = pygame.sprite.Group()
@@ -186,8 +187,6 @@ def game_loop(screen, clock, assets, selected_ship=0):
                     bullet = Bullet(player.rect.centerx, player.rect.top, assets['bullet_img'])
                     all_sprites.add(bullet)
                     bullets.add(bullet)
-                if game_sub_state == "PLAYING" and event.key == pygame.K_c:
-                    player.change_ship()  # Change ship with C key
                 if game_sub_state == "GAME_OVER" and event.key == pygame.K_r:
                     return "PLAYING" # Kembali ke main.py untuk restart
                 if game_sub_state == "GAME_OVER" and event.key == pygame.K_x:
@@ -227,11 +226,12 @@ def game_loop(screen, clock, assets, selected_ship=0):
         all_sprites.draw(screen)
         draw_text(screen, f"Score: {score}", 30, WIDTH / 2, 10)
         
-        # Display current ship type
-        if player.alive():
-            ship_stats = player.get_ship_stats()
-            draw_text(screen, f"Ship: {player.get_current_ship_name()} ({ship_stats['description']})", 25, 100, 50)
-            draw_text(screen, "Press C to change ship", 20, 100, 75)
+        # Apply brightness overlay
+        if menu.settings['brightness'] < 1.0:
+            overlay = pygame.Surface((WIDTH, HEIGHT))
+            overlay.fill(BLACK)
+            overlay.set_alpha(int((1.0 - menu.settings['brightness']) * 255))
+            screen.blit(overlay, (0, 0))
         
         if game_sub_state == "PAUSED":
             draw_text(screen, "Game Paused", 48, WIDTH / 2, HEIGHT / 2 - 50)
