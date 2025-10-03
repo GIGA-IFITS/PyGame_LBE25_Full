@@ -1,10 +1,11 @@
 import pygame
 import sys
 import os
+from highscore import HighScoreManager, show_highscores
 
 # -- Constants --
-HEIGHT = 600
-WIDTH = 800
+HEIGHT = 700
+WIDTH = 1000
 
 # -- Colours --
 BLACK = (0, 0, 0)
@@ -23,22 +24,23 @@ settings = {
 class ShipDisplay:
     def __init__(self, ship_animations):
         self.ship_animations = ship_animations  # List of animation frames per ship
-        self.animation_offset = 0
-        self.animation_speed = 0.08
-        self.animation_direction = 1
-        self.max_offset = 15
         
-        # Frame animation
+        # Frame animation with direction
         self.frame_index = 0
         self.frame_timer = 0
-        self.frame_speed = 10  # Frames per second untuk animasi
+        self.frame_speed = 20  # Slower frame animation
+        self.direction = 1  # 1 for right, -1 for left
+        self.direction_timer = 0
+        self.direction_change_delay = 120  # Change direction every 2 seconds at 60fps
         
     def update(self):
-        # Update animasi gerak kanan-kiri
-        self.animation_offset += self.animation_speed * self.animation_direction
-        if self.animation_offset >= self.max_offset or self.animation_offset <= -self.max_offset:
-            self.animation_direction *= -1
-            
+        # Update direction timer
+        self.direction_timer += 1
+        if self.direction_timer >= self.direction_change_delay:
+            self.direction_timer = 0
+            self.direction *= -1  # Switch direction
+            self.frame_index = 0  # Reset animation
+        
         # Update frame animasi
         self.frame_timer += 1
         if self.frame_timer >= self.frame_speed:
@@ -47,10 +49,15 @@ class ShipDisplay:
                 self.frame_index = (self.frame_index + 1) % len(self.ship_animations[0])
     
     def draw(self, surface, ship_type, x, y):
-        # Gambar ship dengan offset animasi dan frame animasi
+        # Gambar ship dengan frame animasi dan arah
         if ship_type < len(self.ship_animations) and len(self.ship_animations[ship_type]) > 0:
             ship_img = self.ship_animations[ship_type][self.frame_index]
-            ship_rect = ship_img.get_rect(center=(x + self.animation_offset, y))
+            
+            # Flip horizontally jika menghadap kiri
+            if self.direction == -1:  # Facing left
+                ship_img = pygame.transform.flip(ship_img, True, False)
+            
+            ship_rect = ship_img.get_rect(center=(x, y))
             surface.blit(ship_img, ship_rect)
 
 # -- Utility Functions --
@@ -128,6 +135,17 @@ def options_loop(screen, clock):
         
         # Brightness slider
         settings['brightness'] = draw_slider(screen, WIDTH / 2 - 150, HEIGHT / 2, 300, 20, settings['brightness'], "Brightness")
+        
+        # Controls information
+        draw_text(screen, "CONTROLS", 36, WIDTH / 2, HEIGHT / 2 + 80, WHITE)
+        draw_text(screen, "Movement:", 24, WIDTH / 2, HEIGHT / 2 + 120, (200, 200, 200))
+        draw_text(screen, "WASD or Arrow Keys", 20, WIDTH / 2, HEIGHT / 2 + 145, WHITE)
+        
+        draw_text(screen, "Actions:", 24, WIDTH / 2, HEIGHT / 2 + 180, (200, 200, 200))
+        draw_text(screen, "SPACE: Shoot  •  P: Pause", 20, WIDTH / 2, HEIGHT / 2 + 205, WHITE)
+        
+        draw_text(screen, "Ship Selection:", 24, WIDTH / 2, HEIGHT / 2 + 240, (200, 200, 200))
+        draw_text(screen, "← → Arrow Keys (in menu)", 20, WIDTH / 2, HEIGHT / 2 + 265, WHITE)
         
         # Apply brightness overlay
         if settings['brightness'] < 1.0:
@@ -209,20 +227,16 @@ def menu_loop(screen, clock):
         ]
         draw_text(screen, descriptions[selected_ship], 24, WIDTH / 2, HEIGHT / 2 + 10)
         
-        # Draw instruction
-        draw_text(screen, "Use ← → arrows to change ship", 20, WIDTH / 2, HEIGHT / 2 + 40)
-        
         # Buttons
         play_button = draw_button(screen, "Play", WIDTH / 2 - 100, HEIGHT / 2 + 80, 200, 50)
-        options_button = draw_button(screen, "Options", WIDTH / 2 - 100, HEIGHT / 2 + 140, 200, 50)
-        quit_button = draw_button(screen, "Quit", WIDTH / 2 - 100, HEIGHT / 2 + 200, 200, 50)
-        
-        # Controls info
-        draw_text(screen, "Controls:", 20, WIDTH / 2, HEIGHT - 30)
-        draw_text(screen, "WASD/Arrows: Move • Space: Shoot • P: Pause", 16, WIDTH / 2, HEIGHT - 15)
+        highscore_button = draw_button(screen, "High Scores", WIDTH / 2 - 100, HEIGHT / 2 + 140, 200, 50)
+        options_button = draw_button(screen, "Options", WIDTH / 2 - 100, HEIGHT / 2 + 200, 200, 50)
+        quit_button = draw_button(screen, "Quit", WIDTH / 2 - 100, HEIGHT / 2 + 260, 200, 50)
 
         if play_button:
             return ("PLAYING", selected_ship)
+        if highscore_button:
+            return "HIGHSCORES"
         if options_button:
             return "OPTIONS"
         if quit_button:

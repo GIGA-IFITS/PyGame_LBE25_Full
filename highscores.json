@@ -1,0 +1,22 @@
+[
+  {
+    "name": "PLAYER1",
+    "score": 2500
+  },
+  {
+    "name": "GAMER",
+    "score": 2000
+  },
+  {
+    "name": "SHOOTER",
+    "score": 1500
+  },
+  {
+    "name": "PILOT",
+    "score": 1000
+  },
+  {
+    "name": "ACE",
+    "score": 500
+  }
+]

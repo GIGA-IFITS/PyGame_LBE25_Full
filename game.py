@@ -4,6 +4,7 @@ import os
 import random
 import core  # Diubah dari 'import game' menjadi 'import core'
 import menu
+from highscore import HighScoreManager, show_highscores
 
 # -- Main Function --
 def main():
@@ -11,8 +12,8 @@ def main():
     pygame.mixer.init()
 
     # -- Constants --
-    HEIGHT = 600
-    WIDTH = 800
+    HEIGHT = 700
+    WIDTH = 1000
     
     # Setup layar
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -56,6 +57,7 @@ def main():
     # -- Game State Machine --
     game_state = "MENU"
     selected_ship = 0  # Default ship selection
+    highscore_manager = HighScoreManager()  # Initialize high score manager
     
     while True:
         if game_state == "MENU":
@@ -68,6 +70,8 @@ def main():
             else:
                 print("Fungsi menu_loop tidak ditemukan, memulai game secara langsung.")
                 game_state = "PLAYING"
+        elif game_state == "HIGHSCORES":
+            game_state = show_highscores(screen, clock, highscore_manager)
         elif game_state == "OPTIONS":
             if hasattr(menu, 'options_loop'):
                 game_state = menu.options_loop(screen, clock)
